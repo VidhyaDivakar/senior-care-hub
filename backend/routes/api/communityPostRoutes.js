@@ -1,7 +1,7 @@
 const express = require("express");
 
-const CommunityPost = require("../models/CommunityPost");
-const authMiddleware = require("../middleware/authMiddleware");
+const CommunityPost = require("../../models/communityPosts");
+const authMiddleware = require("../../utils/auth");
 
 const router = express.Router();
 

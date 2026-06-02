@@ -1,7 +1,7 @@
 const express = require("express");
 
-const LearningRequest = require("../models/LearningRequest");
-const authMiddleware = require("../middleware/authMiddleware");
+const LearningRequest = require("../../models/learnerRequest");
+const authMiddleware = require("../../utils/auth");
 
 const router = express.Router();
 
