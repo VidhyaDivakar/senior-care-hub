@@ -13,10 +13,11 @@ router.post("/", authMiddleware, async (req, res) => {
 
     try {
 
-        const { title, description, proficiencyLevel } = req.body;
+        const { title, category, description, proficiencyLevel } = req.body;
 
         const skill = new Skill({
             title,
+            category,
             description,
             proficiencyLevel,
             user: req.user.id

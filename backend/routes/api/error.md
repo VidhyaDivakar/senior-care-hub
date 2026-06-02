@@ -3,3 +3,5 @@ userSchema.pre("save", asyncfunction (next) {    if (!this.isModified("password"
 ```
 
 Error - Next is not a function
+
+removed next from the async function as it is not supported by Express
