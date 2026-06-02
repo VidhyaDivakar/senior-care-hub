@@ -24,11 +24,7 @@ const authMiddleware = async (req, res, next) => {
         next();
 
     } catch (error) {
-
-        res.status(401).json({
-            message: "Token is not valid"
-        });
-
+        next(error); // Pass the error to the next middleware
     }
 
 };

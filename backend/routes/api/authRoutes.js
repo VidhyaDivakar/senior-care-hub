@@ -11,38 +11,44 @@ const router = express.Router();
 
 // Sign Up // POST /api/auth/register
 
-router.post("/register", async (req, res) => {
+router.post("/register", (req, res, next) => {
 
     try {
 
         const { username, email, password } = req.body;
 
-        const existingUser = await User.findOne({ email });
+        User.findOne({ email })
+            .then(existingUser => {
+                if (existingUser) {
+                    return res.status(400).json({
+                        message: "User already exists"
+                    });
+                }
 
-        if (existingUser) {
-            return res.status(400).json({
-                message: "User already exists"
+                const user = new User({
+                    username,
+                    email,
+                    password
+                });
+
+                // hashing password by pre-save hook
+                user.save()
+                    .then(() => {
+                        res.status(201).json({
+                            message: "User registered successfully"
+                        });
+                    })
+                    .catch(error => {
+                        next(error); // Pass the error to the next middleware
+                    });
+            })
+            .catch(error => {
+                next(error); // Pass the error to the next middleware
             });
-        }
-
-        const user = new User({
-            username,
-            email,
-            password
-        });
-
-        // hashing password by pre-save hook
-        await user.save();
-
-        res.status(201).json({
-            message: "User registered successfully"
-        });
 
     } catch (error) {
 
-        res.status(500).json({
-            message: error.message
-        });
+        next(error); // Pass the error to the next middleware
 
     }
 
@@ -51,56 +57,62 @@ router.post("/register", async (req, res) => {
 
 // Sign In - // POST /api/auth/login
 
-router.post("/login", async (req, res) => {
+router.post("/login", (req, res, next) => {
 
     try {
 
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
+        User.findOne({ email })
+            .then(user => {
+                if (!user) {
+                    return res.status(400).json({
+                        message: "Invalid credentials"
+                    });
+                }
 
-        if (!user) {
-            return res.status(400).json({
-                message: "Invalid credentials"
+                bcrypt.compare(password, user.password)
+                    .then(isMatch => {
+                        if (!isMatch) {
+                            return res.status(400).json({
+                                message: "Invalid credentials"
+                            });
+                        }
+
+                        const payload = {
+                            user: {
+                                id: user._id
+                            }
+                        };
+
+                        jwt.sign(
+                            payload,
+                            process.env.JWT_SECRET,
+                            { expiresIn: "1h" },
+                            (err, token) => {
+                                if (err) throw err;
+                                res.status(200).json({
+                                    token
+                                });
+                            }
+                        );
+                    })
+                    .catch(error => {
+                        next(error); // Pass the error to the next middleware
+                    });
+            })
+            .catch(error => {
+                next(error); // Pass the error to the next middleware
             });
-        }
-
-        const isMatch = await bcrypt.compare(
-            password,
-            user.password
-        );
-
-        if (!isMatch) {
-            return res.status(400).json({
-                message: "Invalid credentials"
-            });
-        }
-
-        const payload = {
-            user: {
-                id: user._id
-            }
-        };
-
-        const token = jwt.sign(
-            payload,
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
-
-        res.status(200).json({
-            token
-        });
 
     } catch (error) {
 
-        res.status(500).json({
-            message: error.message
-        });
+        next(error); // Pass the error to the next middleware
 
     }
 
 });
+
 
 
 // Current User // GET /api/auth/me
