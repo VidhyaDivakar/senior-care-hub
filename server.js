@@ -2,10 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
-const authRoutes = require("./routes/api/authRoutes");
-const skillRoutes = require("./routes/api/skillRoutes");
-const learningRequestRoutes = require("./routes/api/learningRequestRoutes");
-const communityPostRoutes = require("./routes/api/communityPostRoutes");
+const authRoutes = require("./backend/routes/api/authRoutes");
+const skillRoutes = require("./backend/routes/api/skillRoutes");
+const learningRequestRoutes = require("./backend/routes/api/learningRequestRoutes");
+const communityPostRoutes = require("./backend/routes/api/communityPostRoutes");
 
 dotenv.config();
 
