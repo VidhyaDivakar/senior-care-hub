@@ -16,7 +16,7 @@ const Register = () => {
       <form onSubmit={async (e) => {
         e.preventDefault()
         try {
-          await registerUser(email, password)
+          await registerUser(username, email, password)
           navigate('/login')
         } catch (err) {
           setError('Registration failed. Try again.')
