@@ -3,6 +3,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const connectDB = require("./backend/db/connectDB");
 
 const authRoutes = require("./backend/routes/api/authRoutes");
@@ -17,6 +18,7 @@ connectDB();
 const app = express();
 
 // Middleware
+app.use(cors({ origin: 'http://localhost:5175' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

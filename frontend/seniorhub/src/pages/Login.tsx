@@ -1,15 +1,24 @@
 import { useState } from 'react'
+import { loginUser } from '../api/auth'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   return (
     <div>
       <h2>Login</h2>
-      <form onSubmit={(e) => {
+      {error && <p>{error}</p>}
+      <form onSubmit={async (e) => {
         e.preventDefault()
-        console.log({ email, password })
+        console.log('form submitted', email, password)
+        try {
+          const data = await loginUser(email, password)
+          console.log('Login success:', data)
+        } catch (err) {
+          setError('Invalid email or password')
+        }
       }}>
         <div>
           <label>Email</label>

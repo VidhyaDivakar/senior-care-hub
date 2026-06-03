@@ -4,7 +4,7 @@ SeniorCare Hub – Household Needs & Service Management Platform
 
 ### Project Description
 
-A full-stack MERN application that helps senior households manage recurring monthly needs, service requests, and urgent assistance through a centralized dashboard. Users can track supplies, request transportation or home services, and maintain household requirements with secure authentication and personalized data management.
+A full-stack MERN application that helps active seniors manage learning needs, skill-sharing opportunities, and community activities through a centralized dashboard. Users can track learning goals, showcase skills, contribute community news, and maintain personal interests with secure authentication and personalized data management.
 
 ### Tech Stack
 
@@ -50,107 +50,63 @@ POST /api/users/register
 
 POST /api/users/login
 
-#### Monthly Needs
+#### Learning Requests
 
-POST   /api/needs
+POST   /api/learning-requests
 
-GET    /api/needs
+GET    /api/learning-requests
+GET    /api/learning-requests/:id
+PUT    /api/learning-requests/:id
+DELETE /api/learning-requests/:id
 
-GET    /api/needs/:id
+#### Skills
 
-PUT    /api/needs/:id
+POST   /api/skills
+GET    /api/skills
+GET    /api/skills/:id
+PUT    /api/skills/:id
+DELETE /api/skills/:id
 
-DELETE /api/needs/:id
+#### Community Posts
 
-#### Service Requests
-
-POST   /api/services
-
-GET    /api/services
-
-GET    /api/services/:id
-
-PUT    /api/services/:id
-
-DELETE /api/services/:id
-
-#### Urgent Requests
-
-POST   /api/urgent
-
-GET    /api/urgent
-
-GET    /api/urgent/:id
-
-PUT    /api/urgent/:id
-
-DELETE /api/urgent/:id
-
-#### Supply Status Updates
-
-POST /api/status
-
-GET  /api/status
-
----
+POST   /api/posts
+GET    /api/posts
+GET    /api/posts/:id
+PUT    /api/posts/:id
+DELETE /api/posts/:id
 
 ### React Pages
 
-Login
+pages/
+  Home
+  About
+  Contact
+  Login
+  Register
+  Dashboard
 
-Register
-
-Dashboard
-
-My Needs
-
-Service Requests
-
-Urgent Requests
-
-Status Updates
-
-Profile
+pages/dashboard/
+  DashboardLayout
+  MyProfile
+  MySkills
+  LearningRequests
+  CommunityBoard
+  Events
 
 ---
 
 ### React Components
 
-Navbar
-
-ProtectedRoute
-
-NeedCard
-
-NeedForm
-
-ServiceCard
-
-ServiceForm
-
-UrgentRequestCard
-
-UrgentRequestForm
-
-StatusUpdateForm
-
-DashboardSummary
-
-CategoryFilter
-
-### Core Categories
-
-Groceries
-
-Bath Supplies
-
-Medicines
-
-Hospital Visits
-
-Gardening Needs
-
-Other Requests
+* Navbar
+* Sidebar (Dashboard Navigation)
+* ProtectedRoute
+* SkillCard / SkillForm
+* LearningRequestCard
+* CommunityPostCard
+* EventCard
+* ProfileCard
+* DashboardSummary
+* CategoryFilter
 
 This scope is large enough to demonstrate authentication, authorization, CRUD operations, MongoDB relationships, and React state management, while remaining realistic to complete as a portfolio MERN project.
 
