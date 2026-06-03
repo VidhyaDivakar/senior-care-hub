@@ -1,17 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import DashboardLayout from './pages/dashboard/DashboardLayout'
+import MyProfile from './pages/dashboard/MyProfile'
+import MySkills from './pages/dashboard/MySkills'
+import LearningRequests from './pages/dashboard/LearningRequests'
+import CommunityBoard from './pages/dashboard/CommunityBoard'
+import Events from './pages/dashboard/Events'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-  <h1> Senior Hub</h1>
-      <section id="spacer"></section>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<MyProfile />} />
+          <Route path="skills" element={<MySkills />} />
+          <Route path="learning" element={<LearningRequests />} />
+          <Route path="community" element={<CommunityBoard />} />
+          <Route path="events" element={<Events />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
