@@ -10,6 +10,7 @@ import MySkills from './pages/dashboard/MySkills'
 import LearningRequests from './pages/dashboard/LearningRequests'
 import CommunityBoard from './pages/dashboard/CommunityBoard'
 import Events from './pages/dashboard/Events'
+import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<MyProfile />} />
           <Route path="skills" element={<MySkills />} />
           <Route path="learning" element={<LearningRequests />} />

@@ -1,4 +1,14 @@
-Test:
+---
+{
+  "username": "Mike",
+  "email": "mike@example.com",
+  "password": "password123"
+}
+
+---
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmEyMDQ5YzI0MTBkM2Q3ZjUxZTIxNTk1In0sImlhdCI6MTc4MDUwMzA2OSwiZXhwIjoxNzgxMTA3ODY5fQ.q6qOJsxdzv7uo3bLC5rTCj2AEHHx7_WV6XnvNyR-l7g
+
+---
 
 http://localhost:3006/api/auth/register
 
@@ -9,7 +19,6 @@ http://localhost:3006/api/auth/register
 }
 
 token - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmExZjBiZDFhNTc3MTcwMGU4YmNiY2FmIn0sImlhdCI6MTc4MDQxOTYxNCwiZXhwIjoxNzgwNDIzMjE0fQ.7AJMNtGX6Dn7hsv7H4A5MhPm861xtZ5d6qZ_--WRmIQ
-
 
 http://localhost:3006/api/auth/me
 
@@ -52,3 +61,5 @@ No body
   "updatedAt": "2026-06-02T16:55:18.438Z",
   "__v": 0
 }
+
+---

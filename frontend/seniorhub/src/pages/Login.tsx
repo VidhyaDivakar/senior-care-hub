@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../api/auth'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   return (
     <div>
@@ -16,6 +18,8 @@ const Login = () => {
         try {
           const data = await loginUser(email, password)
           console.log('Login success:', data)
+          localStorage.setItem('token', data.token) // to store token in local storage
+          navigate('/dashboard') // navigates to dashboard
         } catch (err) {
           setError('Invalid email or password')
         }
