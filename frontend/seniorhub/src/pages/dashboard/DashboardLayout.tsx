@@ -1,5 +1,13 @@
 import { Outlet } from 'react-router-dom'
-const Dashboard = () => {
-    return <div> User Dashboard</div>
+//<Outlet /> is a placeholder that tells React Router "render the child route's component here."
+
+const DashboardLayout = () => {
+    return (
+        <div>
+            <p>Dashboard Layout</p>
+            <Outlet />
+        </div>
+    )
 };
-export default Dashboard;
+
+export default DashboardLayout;
