@@ -11,3 +11,8 @@ export const getLearningRequests = async () => {
   const response = await axios.get(API_URL, getAuthHeader())
   return response.data
 }
+
+export const createLearningRequest = async (title: string, description: string, status: string) => {
+  const response = await axios.post(API_URL, { title, description, status }, getAuthHeader())
+  return response.data
+}
