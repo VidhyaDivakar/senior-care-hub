@@ -10,6 +10,16 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmEyMDQ5YzI0MTBkM2Q3ZjU
 
 ---
 
+```
+{
+  "username": "Kate",
+  "email": "kate@example.com",
+  "password": "password123"
+}
+```
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmEyMDQ5YzI0MTBkM2Q3ZjUxZTIxNTk1In0sImlhdCI6MTc4MDUwNDM2OSwiZXhwIjoxNzgxMTA5MTY5fQ.3XR_zRkW3laEd6MPWBtH7HsSn0A7Yn2ht9YZdMt-_Ho
+
 http://localhost:3006/api/auth/register
 
 {
