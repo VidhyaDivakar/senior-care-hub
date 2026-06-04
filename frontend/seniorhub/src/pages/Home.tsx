@@ -9,7 +9,7 @@ const Home = () => {
 
       {/* Navbar */}
       <nav className="flex items-center justify-between px-10 py-4 shadow-sm">
-        <h1 className="text-2xl font-bold text-indigo-900">SeniorCare Hub</h1>
+        <h1 className="text-2xl font-bold text-indigo-900">Senior NexCore</h1>
         <div className="flex items-center gap-6">
           <button onClick={() => navigate('/')} className="text-gray-600 hover:text-indigo-600 font-medium">Home</button>
           <button onClick={() => navigate('/about')} className="text-gray-600 hover:text-indigo-600 font-medium">About</button>

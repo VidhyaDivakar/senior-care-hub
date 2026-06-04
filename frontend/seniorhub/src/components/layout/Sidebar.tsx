@@ -11,7 +11,9 @@ const Sidebar = ({ onLogout }: SidebarProps) => {
   return (
     <aside className="w-64 bg-white shadow-md flex flex-col justify-between py-8 px-6">
       <div>
-        <h2 className="text-xl font-bold text-indigo-900 mb-10">SeniorCare Hub</h2>
+        <NavLink to="/" className="block text-xl font-bold text-indigo-900 mb-10 hover:text-indigo-700">
+          Senior NexCore
+        </NavLink>
         <ul className="flex flex-col gap-4 list-none">
           <li><NavLink to="/dashboard" end className={linkClass}>My Profile</NavLink></li>
           <li><NavLink to="/dashboard/skills" className={linkClass}>My Skills</NavLink></li>
