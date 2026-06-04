@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getLearningRequests, createLearningRequest } from '../../api/learningRequests'
-
-type LearningRequest = {
-  _id: string
-  title: string
-  description: string
-  status: 'Open' | 'In Progress' | 'Completed'
-}
+import type { LearningRequest } from '../../types'
 
 const LearningRequests = () => {
   const [requests, setRequests] = useState<LearningRequest[]>([])

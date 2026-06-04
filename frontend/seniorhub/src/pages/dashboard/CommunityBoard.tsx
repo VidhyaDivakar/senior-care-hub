@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getCommunityPosts, createCommunityPost } from '../../api/communityPosts'
-
-type CommunityPost = {
-  _id: string
-  title: string
-  content: string
-  category: 'Event' | 'Announcement' | 'Workshop' | 'Volunteer' | 'General'
-  user: { username: string; email: string }
-}
+import type { CommunityPost } from '../../types'
 
 const CommunityBoard = () => {
   const [posts, setPosts] = useState<CommunityPost[]>([])

@@ -2,16 +2,13 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { getSkills, createSkill } from '../../api/skills'
 import { getLearningRequests, createLearningRequest } from '../../api/learningRequests'
-import { getCommunityPosts } from '../../api/communityPosts'
-import { Lightbulb, BookOpen, Newspaper, MessageCircle, Bell, Calendar, PlusCircle, Users, X } from 'lucide-react'
+import { getCommunityPosts, createCommunityPost } from '../../api/communityPosts'
+import { Lightbulb, BookOpen, Newspaper, MessageCircle, Bell, Calendar, PlusCircle, Users } from 'lucide-react'
 import axios from 'axios'
+import Modal from '../../components/Modal'
+import StatCard from '../../components/StatCard'
+import type { ActivityItem } from '../../types'
 //<Outlet /> is a placeholder that tells React Router "render the child route's component here."
-
-type ActivityItem = {
-  label: string
-  type: string
-  createdAt: string
-}
 
 const DashboardLayout = () => {
   const navigate = useNavigate()
@@ -22,6 +19,7 @@ const DashboardLayout = () => {
 
   const [showSkillModal, setShowSkillModal] = useState(false)
   const [showLearningModal, setShowLearningModal] = useState(false)
+  const [showPostModal, setShowPostModal] = useState(false)
 
   const [skillTitle, setSkillTitle] = useState('')
   const [skillCategory, setSkillCategory] = useState('')
@@ -31,6 +29,10 @@ const DashboardLayout = () => {
   const [learnTitle, setLearnTitle] = useState('')
   const [learnDescription, setLearnDescription] = useState('')
   const [learnLevel, setLearnLevel] = useState('Beginner')
+
+  const [postTitle, setPostTitle] = useState('')
+  const [postContent, setPostContent] = useState('')
+  const [postCategory, setPostCategory] = useState('General')
 
   useEffect(() => {
     getSkills().then(data => setSkills(data)).catch(() => {})
@@ -77,6 +79,16 @@ const DashboardLayout = () => {
     if (type === 'Skill') return <Lightbulb size={16} className="text-indigo-600" />
     if (type === 'Learning Request') return <BookOpen size={16} className="text-purple-600" />
     return <Newspaper size={16} className="text-blue-600" />
+  }
+
+  const handleCreatePost = async (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    try {
+      const newPost = await createCommunityPost(postTitle, postContent, postCategory)
+      setPosts([newPost, ...posts])
+      setPostTitle(''); setPostContent(''); setPostCategory('General')
+      setShowPostModal(false)
+    } catch { }
   }
 
   const handleLogout = () => {
@@ -131,11 +143,7 @@ const DashboardLayout = () => {
         {/* Overview Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-10 py-8">
           {cards.map(card => (
-            <div key={card.label} className={`${card.bg} rounded-xl p-6 text-center`}>
-              <div className={`flex justify-center mb-3 ${card.color}`}>{card.icon}</div>
-              <p className="text-3xl font-bold text-gray-800 mb-1">{card.count}</p>
-              <p className="text-gray-500 font-medium">{card.label}</p>
-            </div>
+            <StatCard key={card.label} label={card.label} count={card.count} icon={card.icon} bg={card.bg} color={card.color} />
           ))}
         </div>
 
@@ -175,7 +183,7 @@ const DashboardLayout = () => {
             <button onClick={() => setShowLearningModal(true)} className="flex items-center gap-2 bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700">
               <BookOpen size={16} /> New Learning Request
             </button>
-            <button onClick={() => navigate('/dashboard/community')} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
+            <button onClick={() => setShowPostModal(true)} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
               <PlusCircle size={16} /> Create Post
             </button>
             <button className="flex items-center gap-2 bg-gray-200 text-gray-600 px-5 py-2 rounded-lg cursor-not-allowed">
@@ -192,69 +200,84 @@ const DashboardLayout = () => {
 
       {/* Add Skill Modal */}
       {showSkillModal && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 w-full max-w-md shadow-xl">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-800">Add Skill</h3>
-              <X size={20} className="cursor-pointer text-gray-400 hover:text-gray-600" onClick={() => setShowSkillModal(false)} />
+        <Modal title="Add Skill" onClose={() => setShowSkillModal(false)}>
+          <form onSubmit={handleAddSkill} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="skillTitle" className="text-sm font-medium text-gray-700">Skill Title</label>
+              <input id="skillTitle" type="text" value={skillTitle} onChange={e => setSkillTitle(e.target.value)} placeholder='e.g. "Photography"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
             </div>
-            <form onSubmit={handleAddSkill} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <label htmlFor="skillTitle" className="text-sm font-medium text-gray-700">Skill Title</label>
-                <input id="skillTitle" type="text" value={skillTitle} onChange={e => setSkillTitle(e.target.value)} placeholder='e.g. "Photography"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="skillCategory" className="text-sm font-medium text-gray-700">Category</label>
-                <input id="skillCategory" type="text" value={skillCategory} onChange={e => setSkillCategory(e.target.value)} placeholder='e.g. "Arts"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="skillDescription" className="text-sm font-medium text-gray-700">Description</label>
-                <textarea id="skillDescription" value={skillDescription} onChange={e => setSkillDescription(e.target.value)} placeholder="Describe your skill" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" rows={3} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="skillLevel" className="text-sm font-medium text-gray-700">Proficiency Level</label>
-                <select id="skillLevel" value={skillLevel} onChange={e => setSkillLevel(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                </select>
-              </div>
-              <button type="submit" className="bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Add Skill</button>
-            </form>
-          </div>
-        </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="skillCategory" className="text-sm font-medium text-gray-700">Category</label>
+              <input id="skillCategory" type="text" value={skillCategory} onChange={e => setSkillCategory(e.target.value)} placeholder='e.g. "Arts"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="skillDescription" className="text-sm font-medium text-gray-700">Description</label>
+              <textarea id="skillDescription" value={skillDescription} onChange={e => setSkillDescription(e.target.value)} placeholder="Describe your skill" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" rows={3} />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="skillLevel" className="text-sm font-medium text-gray-700">Proficiency Level</label>
+              <select id="skillLevel" value={skillLevel} onChange={e => setSkillLevel(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <button type="submit" className="bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Add Skill</button>
+          </form>
+        </Modal>
       )}
 
       {/* New Learning Request Modal */}
       {showLearningModal && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 w-full max-w-md shadow-xl">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-800">New Learning Request</h3>
-              <X size={20} className="cursor-pointer text-gray-400 hover:text-gray-600" onClick={() => setShowLearningModal(false)} />
+        <Modal title="New Learning Request" onClose={() => setShowLearningModal(false)}>
+          <form onSubmit={handleAddLearning} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="learnTitle" className="text-sm font-medium text-gray-700">What do you want to learn?</label>
+              <input id="learnTitle" type="text" value={learnTitle} onChange={e => setLearnTitle(e.target.value)} placeholder='e.g. "Basic Photography"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
             </div>
-            <form onSubmit={handleAddLearning} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="learnDescription" className="text-sm font-medium text-gray-700">Describe your learning goal</label>
+              <textarea id="learnDescription" value={learnDescription} onChange={e => setLearnDescription(e.target.value)} placeholder="Write a short description" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" rows={3} />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="learnLevel" className="text-sm font-medium text-gray-700">Preferred Level</label>
+              <select id="learnLevel" value={learnLevel} onChange={e => setLearnLevel(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <option value="" disabled>Select Level</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <button type="submit" className="bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Submit Request</button>
+          </form>
+        </Modal>
+      )}
+
+      {/* Create Post Modal */}
+      {showPostModal && (
+        <Modal title="Create Post" onClose={() => setShowPostModal(false)}>
+          <form onSubmit={handleCreatePost} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="postTitle" className="text-sm font-medium text-gray-700">Post Title</label>
+              <input id="postTitle" type="text" value={postTitle} onChange={e => setPostTitle(e.target.value)} placeholder='e.g. "Weekend Gardening Workshop"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="postContent" className="text-sm font-medium text-gray-700">Content</label>
+              <textarea id="postContent" value={postContent} onChange={e => setPostContent(e.target.value)} placeholder="Write your post content here" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" rows={4} />
+            </div>
               <div className="flex flex-col gap-1">
-                <label htmlFor="learnTitle" className="text-sm font-medium text-gray-700">What do you want to learn?</label>
-                <input id="learnTitle" type="text" value={learnTitle} onChange={e => setLearnTitle(e.target.value)} placeholder='e.g. "Basic Photography"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="learnDescription" className="text-sm font-medium text-gray-700">Describe your learning goal</label>
-                <textarea id="learnDescription" value={learnDescription} onChange={e => setLearnDescription(e.target.value)} placeholder="Write a short description" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" rows={3} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="learnLevel" className="text-sm font-medium text-gray-700">Preferred Level</label>
-                <select id="learnLevel" value={learnLevel} onChange={e => setLearnLevel(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
-                  <option value="" disabled>Select Level</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
+                <label htmlFor="postCategory" className="text-sm font-medium text-gray-700">Category</label>
+                <select id="postCategory" value={postCategory} onChange={e => setPostCategory(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  <option value="General">General</option>
+                  <option value="Event">Event</option>
+                  <option value="Announcement">Announcement</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Volunteer">Volunteer</option>
                 </select>
               </div>
-              <button type="submit" className="bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Submit Request</button>
-            </form>
-          </div>
-        </div>
+            <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Create Post</button>
+          </form>
+        </Modal>
       )}
 
     </div>

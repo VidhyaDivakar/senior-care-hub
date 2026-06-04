@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getSkills, createSkill } from '../../api/skills'
-
-type Skill = {
-  _id: string
-  title: string
-  category: string
-  description: string
-  proficiencyLevel: 'Beginner' | 'Intermediate' | 'Advanced'
-}
+import type { Skill } from '../../types'
 
 const MySkills = () => {
   const [skills, setSkills] = useState<Skill[]>([])
