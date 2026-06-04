@@ -1,9 +1,9 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getSkills } from '../../api/skills'
-import { getLearningRequests } from '../../api/learningRequests'
+import { getSkills, createSkill } from '../../api/skills'
+import { getLearningRequests, createLearningRequest } from '../../api/learningRequests'
 import { getCommunityPosts } from '../../api/communityPosts'
-import { Lightbulb, BookOpen, Newspaper, MessageCircle, Bell, Calendar, PlusCircle, Users } from 'lucide-react'
+import { Lightbulb, BookOpen, Newspaper, MessageCircle, Bell, Calendar, PlusCircle, Users, X } from 'lucide-react'
 import axios from 'axios'
 //<Outlet /> is a placeholder that tells React Router "render the child route's component here."
 
@@ -20,6 +20,18 @@ const DashboardLayout = () => {
   const [posts, setPosts] = useState<any[]>([])
   const [username, setUsername] = useState('')
 
+  const [showSkillModal, setShowSkillModal] = useState(false)
+  const [showLearningModal, setShowLearningModal] = useState(false)
+
+  const [skillTitle, setSkillTitle] = useState('')
+  const [skillCategory, setSkillCategory] = useState('')
+  const [skillDescription, setSkillDescription] = useState('')
+  const [skillLevel, setSkillLevel] = useState('Beginner')
+
+  const [learnTitle, setLearnTitle] = useState('')
+  const [learnDescription, setLearnDescription] = useState('')
+  const [learnLevel, setLearnLevel] = useState('Beginner')
+
   useEffect(() => {
     getSkills().then(data => setSkills(data)).catch(() => {})
     getLearningRequests().then(data => setLearningRequests(data)).catch(() => {})
@@ -30,6 +42,28 @@ const DashboardLayout = () => {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => setUsername(res.data.username)).catch(() => {})
   }, [])
+
+  const handleAddSkill = async (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    try {
+      const newSkill = await createSkill(skillTitle, skillCategory, skillDescription, skillLevel)
+      setSkills([...skills, newSkill])
+      setSkillTitle(''); setSkillCategory(''); setSkillDescription(''); setSkillLevel('Beginner')
+      setShowSkillModal(false)
+    } catch { }
+  }
+
+  const handleAddLearning = async (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    try {
+      // Preferred Level is appended to description as workaround — backend has no preferredLevel field
+      const fullDescription = `${learnDescription} | Preferred Level: ${learnLevel}`
+      const newRequest = await createLearningRequest(learnTitle, fullDescription, 'Open')
+      setLearningRequests([...learningRequests, newRequest])
+      setLearnTitle(''); setLearnDescription(''); setLearnLevel('Beginner')
+      setShowLearningModal(false)
+    } catch { }
+  }
 
   const recentActivity: ActivityItem[] = [
     ...skills.map(s => ({ label: s.title, type: 'Skill', createdAt: s.createdAt })),
@@ -65,31 +99,13 @@ const DashboardLayout = () => {
         <div>
           <h2 className="text-xl font-bold text-indigo-900 mb-10">SeniorCare Hub</h2>
           <ul className="flex flex-col gap-4 list-none">
-            <li>
-              <NavLink to="/dashboard" end className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>
-                My Profile
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/dashboard/skills" className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>
-                My Skills
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/dashboard/learning" className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>
-                Learning Requests
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/dashboard/community" className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>
-                Community Board
-              </NavLink>
-            </li>
+            <li><NavLink to="/dashboard" end className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>My Profile</NavLink></li>
+            <li><NavLink to="/dashboard/skills" className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>My Skills</NavLink></li>
+            <li><NavLink to="/dashboard/learning" className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>Learning Requests</NavLink></li>
+            <li><NavLink to="/dashboard/community" className={({ isActive }) => isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'}>Community Board</NavLink></li>
           </ul>
         </div>
-        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-          Logout
-        </button>
+        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</button>
       </aside>
 
       {/* Main content */}
@@ -125,8 +141,6 @@ const DashboardLayout = () => {
 
         {/* Recent Activity + Upcoming Events */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-10 pb-8">
-
-          {/* Recent Activity */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <h4 className="text-lg font-bold text-gray-800 mb-4">Recent Activity</h4>
             {recentActivity.length === 0 ? (
@@ -142,8 +156,6 @@ const DashboardLayout = () => {
               </ul>
             )}
           </div>
-
-          {/* Upcoming Events */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <h4 className="text-lg font-bold text-gray-800 mb-4">Upcoming Events</h4>
             <div className="flex items-center gap-3 text-gray-400">
@@ -151,23 +163,22 @@ const DashboardLayout = () => {
               <p className="text-sm">No upcoming events scheduled.</p>
             </div>
           </div>
-
         </div>
 
         {/* Quick Actions */}
-        <div className="px-10 pb-10">
+        <div className="px-10 pb-8">
           <h4 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h4>
           <div className="flex flex-wrap gap-4">
-            <button onClick={() => navigate('/dashboard/skills')} className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700">
+            <button onClick={() => setShowSkillModal(true)} className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700">
               <Lightbulb size={16} /> Add Skill
             </button>
-            <button onClick={() => navigate('/dashboard/learning')} className="flex items-center gap-2 bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700">
+            <button onClick={() => setShowLearningModal(true)} className="flex items-center gap-2 bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700">
               <BookOpen size={16} /> New Learning Request
             </button>
             <button onClick={() => navigate('/dashboard/community')} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
               <PlusCircle size={16} /> Create Post
             </button>
-            <button className="flex items-center gap-2 bg-gray-200 text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-300 cursor-not-allowed">
+            <button className="flex items-center gap-2 bg-gray-200 text-gray-600 px-5 py-2 rounded-lg cursor-not-allowed">
               <Users size={16} /> Browse Members
             </button>
           </div>
@@ -178,6 +189,74 @@ const DashboardLayout = () => {
         </main>
 
       </div>
+
+      {/* Add Skill Modal */}
+      {showSkillModal && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 w-full max-w-md shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-800">Add Skill</h3>
+              <X size={20} className="cursor-pointer text-gray-400 hover:text-gray-600" onClick={() => setShowSkillModal(false)} />
+            </div>
+            <form onSubmit={handleAddSkill} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label htmlFor="skillTitle" className="text-sm font-medium text-gray-700">Skill Title</label>
+                <input id="skillTitle" type="text" value={skillTitle} onChange={e => setSkillTitle(e.target.value)} placeholder='e.g. "Photography"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="skillCategory" className="text-sm font-medium text-gray-700">Category</label>
+                <input id="skillCategory" type="text" value={skillCategory} onChange={e => setSkillCategory(e.target.value)} placeholder='e.g. "Arts"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="skillDescription" className="text-sm font-medium text-gray-700">Description</label>
+                <textarea id="skillDescription" value={skillDescription} onChange={e => setSkillDescription(e.target.value)} placeholder="Describe your skill" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" rows={3} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="skillLevel" className="text-sm font-medium text-gray-700">Proficiency Level</label>
+                <select id="skillLevel" value={skillLevel} onChange={e => setSkillLevel(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+              <button type="submit" className="bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Add Skill</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* New Learning Request Modal */}
+      {showLearningModal && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 w-full max-w-md shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-800">New Learning Request</h3>
+              <X size={20} className="cursor-pointer text-gray-400 hover:text-gray-600" onClick={() => setShowLearningModal(false)} />
+            </div>
+            <form onSubmit={handleAddLearning} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label htmlFor="learnTitle" className="text-sm font-medium text-gray-700">What do you want to learn?</label>
+                <input id="learnTitle" type="text" value={learnTitle} onChange={e => setLearnTitle(e.target.value)} placeholder='e.g. "Basic Photography"' required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="learnDescription" className="text-sm font-medium text-gray-700">Describe your learning goal</label>
+                <textarea id="learnDescription" value={learnDescription} onChange={e => setLearnDescription(e.target.value)} placeholder="Write a short description" required className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" rows={3} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="learnLevel" className="text-sm font-medium text-gray-700">Preferred Level</label>
+                <select id="learnLevel" value={learnLevel} onChange={e => setLearnLevel(e.target.value)} className="border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                  <option value="" disabled>Select Level</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+              <button type="submit" className="bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Submit Request</button>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
