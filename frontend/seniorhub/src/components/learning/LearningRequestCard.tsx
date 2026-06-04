@@ -1,4 +1,4 @@
-import type { LearningRequest } from '../types'
+import type { LearningRequest } from '../../types'
 
 type LearningRequestCardProps = {
   request: LearningRequest

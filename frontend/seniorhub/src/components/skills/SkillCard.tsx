@@ -1,4 +1,4 @@
-import type { Skill } from '../types'
+import type { Skill } from '../../types'
 
 type SkillCardProps = {
   skill: Skill

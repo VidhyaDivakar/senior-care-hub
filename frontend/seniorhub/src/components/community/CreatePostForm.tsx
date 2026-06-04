@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { createCommunityPost } from '../api/communityPosts'
-import Modal from './Modal'
+import { createCommunityPost } from '../../api/communityPosts'
+import Modal from '../ui/Modal'
 
 type CreatePostFormProps = {
   onClose: () => void

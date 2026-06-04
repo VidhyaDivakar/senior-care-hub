@@ -1,5 +1,5 @@
 import { Lightbulb, BookOpen, Newspaper } from 'lucide-react'
-import type { ActivityItem } from '../types'
+import type { ActivityItem } from '../../types'
 
 type RecentActivityProps = {
   activities: ActivityItem[]

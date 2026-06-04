@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import SkillCard from './SkillCard'
-import type { Skill } from '../types'
+import type { Skill } from '../../types'
 
 type SkillsPreviewProps = {
   skills: Skill[]

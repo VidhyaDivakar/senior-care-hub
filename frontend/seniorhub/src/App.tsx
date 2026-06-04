@@ -10,7 +10,7 @@ import MySkills from './pages/dashboard/MySkills'
 import LearningRequests from './pages/dashboard/LearningRequests'
 import CommunityBoard from './pages/dashboard/CommunityBoard'
 import Events from './pages/dashboard/Events'
-import ProtectedRoute from './components/ProtectedRoute'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import './App.css'
 
 function App() {

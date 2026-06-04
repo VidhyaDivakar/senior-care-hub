@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import CommunityPostCard from './CommunityPostCard'
-import type { CommunityPost } from '../types'
+import type { CommunityPost } from '../../types'
 
 type CommunityPostsPreviewProps = {
   posts: CommunityPost[]

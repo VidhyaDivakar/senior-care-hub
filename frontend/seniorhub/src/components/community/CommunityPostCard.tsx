@@ -1,4 +1,4 @@
-import type { CommunityPost } from '../types'
+import type { CommunityPost } from '../../types'
 
 type CommunityPostCardProps = {
   post: CommunityPost

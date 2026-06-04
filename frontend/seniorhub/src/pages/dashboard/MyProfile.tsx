@@ -2,11 +2,11 @@ import { Lightbulb, BookOpen, Newspaper, MessageCircle } from 'lucide-react'
 import { useSkills } from '../../hooks/useSkills'
 import { useLearningRequests } from '../../hooks/useLearningRequests'
 import { useCommunityPosts } from '../../hooks/useCommunityPosts'
-import StatCard from '../../components/StatCard'
-import SkillsPreview from '../../components/SkillsPreview'
-import LearningRequestsPreview from '../../components/LearningRequestsPreview'
-import CommunityPostsPreview from '../../components/CommunityPostsPreview'
-import UpcomingEvents from '../../components/UpcomingEvents'
+import StatCard from '../../components/ui/StatCard'
+import SkillsPreview from '../../components/skills/SkillsPreview'
+import LearningRequestsPreview from '../../components/learning/LearningRequestsPreview'
+import CommunityPostsPreview from '../../components/community/CommunityPostsPreview'
+import UpcomingEvents from '../../components/dashboard/UpcomingEvents'
 
 const MyProfile = () => {
   const { skills } = useSkills()

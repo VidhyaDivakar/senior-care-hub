@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSkills } from '../../hooks/useSkills'
 import { Pencil, Trash2, PlusCircle } from 'lucide-react'
-import Modal from '../../components/Modal'
+import Modal from '../../components/ui/Modal'
 import type { Skill } from '../../types'
 
 const levelStyle: Record<string, string> = {

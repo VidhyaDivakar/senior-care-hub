@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import LearningRequestCard from './LearningRequestCard'
-import type { LearningRequest } from '../types'
+import type { LearningRequest } from '../../types'
 
 type LearningRequestsPreviewProps = {
   requests: LearningRequest[]

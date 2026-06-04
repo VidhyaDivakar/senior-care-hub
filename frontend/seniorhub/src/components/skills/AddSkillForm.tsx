@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { createSkill } from '../api/skills'
-import Modal from './Modal'
+import { createSkill } from '../../api/skills'
+import Modal from '../ui/Modal'
 
 type AddSkillFormProps = {
   onClose: () => void

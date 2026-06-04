@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { createLearningRequest } from '../api/learningRequests'
-import Modal from './Modal'
+import { createLearningRequest } from '../../api/learningRequests'
+import Modal from '../ui/Modal'
 
 type AddLearningFormProps = {
   onClose: () => void
