@@ -69,12 +69,19 @@ const DashboardLayout = () => {
           ))}
         </div>
 
+        {/* Skills + Learning Requests row */}
+        <div className="grid grid-cols-2 gap-6 px-10 pb-8">
+          <SkillsPreview skills={skills} />
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h4 className="text-lg font-bold text-gray-800">Learning Requests</h4>
+            <p className="text-gray-400 text-sm mt-2">Coming soon...</p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-10 pb-8">
           <RecentActivity activities={recentActivity} />
           <UpcomingEvents />
         </div>
-
-        <SkillsPreview skills={skills} />
 
         <QuickActions
           onAddSkill={() => setShowSkillModal(true)}

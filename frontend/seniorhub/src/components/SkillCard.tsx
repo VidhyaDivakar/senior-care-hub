@@ -1,4 +1,3 @@
-import { Lightbulb } from 'lucide-react'
 import type { Skill } from '../types'
 
 type SkillCardProps = {
@@ -13,16 +12,14 @@ const levelStyle: Record<string, string> = {
 
 const SkillCard = ({ skill }: SkillCardProps) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
-      {/* Image placeholder */}
-      <div className="bg-indigo-100 flex items-center justify-center h-28">
-        <Lightbulb size={40} className="text-indigo-400" />
-      </div>
+    <div className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
+      {/* Image placeholder — swap src when image is available */}
+      <div className="w-12 h-12 rounded-md bg-indigo-100 flex-shrink-0" />
 
-      <div className="p-4 flex flex-col gap-2">
-        <h5 className="font-semibold text-gray-800">{skill.title}</h5>
-        <p className="text-sm text-gray-500 line-clamp-2">{skill.description}</p>
-        <span className={`text-xs font-medium px-2 py-1 rounded-full w-fit ${levelStyle[skill.proficiencyLevel]}`}>
+      <div className="flex flex-col gap-1 min-w-0">
+        <h5 className="font-semibold text-gray-800 text-sm truncate">{skill.title}</h5>
+        <p className="text-xs text-gray-500 line-clamp-2">{skill.description}</p>
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full w-fit ${levelStyle[skill.proficiencyLevel]}`}>
           {skill.proficiencyLevel}
         </span>
       </div>
