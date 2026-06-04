@@ -15,7 +15,7 @@ router.post("/register", (req, res, next) => {
 
     try {
 
-        const { username, email, password } = req.body;
+        const { username, email, password, role } = req.body;
 
         User.findOne({ email })
             .then(existingUser => {
@@ -28,7 +28,8 @@ router.post("/register", (req, res, next) => {
                 const user = new User({
                     username,
                     email,
-                    password
+                    password,
+                    role: role === 'provider' ? 'provider' : 'senior'
                 });
 
                 // hashing password by pre-save hook
@@ -81,7 +82,8 @@ router.post("/login", (req, res, next) => {
 
                         const payload = {
                             user: {
-                                id: user._id
+                                id: user._id,
+                                role: user.role
                             }
                         };
 

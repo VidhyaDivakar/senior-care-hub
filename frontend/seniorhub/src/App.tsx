@@ -11,6 +11,7 @@ import MySkills from './pages/dashboard/MySkills'
 import LearningRequests from './pages/dashboard/LearningRequests'
 import CommunityBoard from './pages/dashboard/CommunityBoard'
 import Events from './pages/dashboard/Events'
+import ProviderView from './pages/dashboard/ProviderView'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import './App.css'
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="learning" element={<LearningRequests />} />
           <Route path="community" element={<CommunityBoard />} />
           <Route path="events" element={<Events />} />
+          <Route path="provider" element={<ProtectedRoute role="provider"><ProviderView /></ProtectedRoute>} />
         </Route>
       </Routes>
     </BrowserRouter>

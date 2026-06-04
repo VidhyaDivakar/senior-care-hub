@@ -1,12 +1,17 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth()
+type ProtectedRouteProps = {
+  children: React.ReactNode
+  role?: 'senior' | 'provider' | 'admin'
+}
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />
-  }
+const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
+  const { isAuthenticated, user } = useAuth()
+
+  if (!isAuthenticated) return <Navigate to="/login" />
+
+  if (role && user?.role !== role) return <Navigate to="/dashboard" />
 
   return children
 }

@@ -6,6 +6,7 @@ const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState('senior')
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
@@ -28,7 +29,7 @@ const Register = () => {
         <form onSubmit={async (e) => {
           e.preventDefault()
           try {
-            await registerUser(username, email, password)
+            await registerUser(username, email, password, role)
             navigate('/login')
           } catch {
             setError('Registration failed. Try again.')
@@ -72,6 +73,19 @@ const Register = () => {
               required
               className="border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="role" className="text-sm font-medium text-gray-700">I am joining as a</label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
+              <option value="senior">Senior — looking to learn and connect</option>
+              <option value="provider">Provider — offering services or skills</option>
+            </select>
           </div>
 
           <button
