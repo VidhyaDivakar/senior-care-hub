@@ -20,7 +20,7 @@ export type CommunityPost = {
   title: string
   content: string
   category: 'Event' | 'Announcement' | 'Workshop' | 'Volunteer' | 'General'
-  user: { username: string; email: string }
+  user: { _id: string; username: string; email: string }
   createdAt: string
 }
 

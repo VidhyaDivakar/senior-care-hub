@@ -16,3 +16,13 @@ export const createLearningRequest = async (title: string, description: string, 
   const response = await axios.post(API_URL, { title, description, status }, getAuthHeader())
   return response.data
 }
+
+export const updateLearningRequest = async (id: string, title: string, description: string, status: string) => {
+  const response = await axios.put(`${API_URL}/${id}`, { title, description, status }, getAuthHeader())
+  return response.data
+}
+
+export const deleteLearningRequest = async (id: string) => {
+  const response = await axios.delete(`${API_URL}/${id}`, getAuthHeader())
+  return response.data
+}
