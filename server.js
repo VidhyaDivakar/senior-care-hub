@@ -10,6 +10,7 @@ const authRoutes = require("./backend/routes/api/authRoutes");
 const skillRoutes = require("./backend/routes/api/skillRoutes");
 const learningRequestRoutes = require("./backend/routes/api/learningRequestRoutes");
 const communityPostRoutes = require("./backend/routes/api/communityPostRoutes");
+const profileRoutes = require("./backend/routes/api/profileRoutes");
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/learning-requests", learningRequestRoutes);
 app.use("/api/posts", communityPostRoutes);
+app.use("/api/profile", profileRoutes);
 
 // Health Check Route
 app.get("/", (req, res) => {

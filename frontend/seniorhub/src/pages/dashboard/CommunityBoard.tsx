@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useCommunityPosts } from '../../hooks/useCommunityPosts'
 import { useAuth } from '../../hooks/useAuth'
-import { Pencil, Trash2, PlusCircle, Eye } from 'lucide-react'
+import { Pencil, Trash2, PlusCircle, Eye, Mail, Phone, MessageCircle, Share2, Copy, Check } from 'lucide-react'
 import Modal from '../../components/ui/Modal'
 import type { CommunityPost } from '../../types'
 
@@ -21,6 +21,7 @@ const CommunityBoard = () => {
   const [showModal, setShowModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
   const [viewing, setViewing] = useState<CommunityPost | null>(null)
+  const [copied, setCopied] = useState(false)
   const [editing, setEditing] = useState<CommunityPost | null>(null)
   const [form, setForm] = useState(emptyForm)
 
@@ -142,15 +143,68 @@ const CommunityBoard = () => {
       )}
 
       {showViewModal && viewing && (
-        <Modal title={viewing.title} onClose={() => setShowViewModal(false)}>
-          <div className="flex flex-col gap-4">
+        <Modal title={viewing.title} onClose={() => { setShowViewModal(false); setCopied(false) }}>
+          <div className="flex flex-col gap-5">
+
+            {/* Category + Author */}
             <div className="flex items-center gap-2">
               <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle[viewing.category]}`}>
                 {viewing.category}
               </span>
-              <span className="text-sm text-gray-400">by {viewing.user?.username}</span>
+              <span className="text-sm text-gray-400">by <span className="font-medium text-gray-600">{viewing.user?.username}</span></span>
             </div>
+
+            {/* Content */}
             <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{viewing.content}</p>
+
+            <hr className="border-gray-100" />
+
+            {/* Contact */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">For more details, contact us through</p>
+              <div className="flex flex-col gap-2">
+                <a href={`mailto:${viewing.user?.email}`} className="flex items-center gap-3 text-sm text-gray-600 hover:text-indigo-600">
+                  <Mail size={16} className="text-indigo-400" />
+                  {viewing.user?.email}
+                </a>
+                <div className="flex items-center gap-3 text-sm text-gray-400">
+                  <Phone size={16} className="text-indigo-400" />
+                  <span>Phone not provided</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-gray-400">
+                  <MessageCircle size={16} className="text-indigo-400" />
+                  <span>Chat — coming soon</span>
+                </div>
+              </div>
+            </div>
+
+            <hr className="border-gray-100" />
+
+            {/* Share */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Share</p>
+              <div className="flex gap-3">
+                {'share' in navigator && (
+                  <button
+                    onClick={() => navigator.share({ title: viewing.title, text: viewing.content, url: window.location.href })}
+                    className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700"
+                  >
+                    <Share2 size={14} /> Share
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href)
+                    setCopied(true)
+                    setTimeout(() => setCopied(false), 2000)
+                  }}
+                  className="flex items-center gap-2 border border-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm hover:bg-gray-50"
+                >
+                  {copied ? <><Check size={14} className="text-green-500" /> Copied!</> : <><Copy size={14} /> Copy Link</>}
+                </button>
+              </div>
+            </div>
+
           </div>
         </Modal>
       )}
