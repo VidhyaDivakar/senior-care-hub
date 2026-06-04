@@ -5,6 +5,7 @@ import Contact from './pages/Contact'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
+import Overview from './pages/dashboard/Overview'
 import MyProfile from './pages/dashboard/MyProfile'
 import MySkills from './pages/dashboard/MySkills'
 import LearningRequests from './pages/dashboard/LearningRequests'
@@ -24,7 +25,8 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-          <Route index element={<MyProfile />} />
+          <Route index element={<Overview />} />
+          <Route path="profile" element={<MyProfile />} />
           <Route path="skills" element={<MySkills />} />
           <Route path="learning" element={<LearningRequests />} />
           <Route path="community" element={<CommunityBoard />} />
