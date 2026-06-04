@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { getSkills, createSkill, updateSkill, deleteSkill } from '../../api/skills'
+import { useState } from 'react'
+import { useSkills } from '../../hooks/useSkills'
 import { Pencil, Trash2, PlusCircle } from 'lucide-react'
 import Modal from '../../components/Modal'
 import type { Skill } from '../../types'
@@ -13,40 +13,36 @@ const levelStyle: Record<string, string> = {
 const emptyForm = { title: '', category: '', description: '', proficiencyLevel: 'Beginner' }
 
 const MySkills = () => {
-  const [skills, setSkills] = useState<Skill[]>([])
+  const { skills, error, addSkill, editSkill, removeSkill } = useSkills()
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState<Skill | null>(null)
   const [form, setForm] = useState(emptyForm)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    getSkills().then(setSkills).catch(() => setError('Failed to load skills'))
-  }, [])
 
   const openAdd = () => { setEditing(null); setForm(emptyForm); setShowModal(true) }
-  const openEdit = (skill: Skill) => { setEditing(skill); setForm({ title: skill.title, category: skill.category, description: skill.description, proficiencyLevel: skill.proficiencyLevel }); setShowModal(true) }
+  const openEdit = (skill: Skill) => {
+    setEditing(skill)
+    setForm({ title: skill.title, category: skill.category, description: skill.description, proficiencyLevel: skill.proficiencyLevel })
+    setShowModal(true)
+  }
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     try {
       if (editing) {
-        const updated = await updateSkill(editing._id, form.title, form.category, form.description, form.proficiencyLevel)
-        setSkills(skills.map(s => s._id === updated._id ? updated : s))
+        await editSkill(editing._id, form.title, form.category, form.description, form.proficiencyLevel)
       } else {
-        const created = await createSkill(form.title, form.category, form.description, form.proficiencyLevel)
-        setSkills([...skills, created])
+        await addSkill(form.title, form.category, form.description, form.proficiencyLevel)
       }
       setShowModal(false)
       setForm(emptyForm)
-    } catch { setError('Failed to save skill') }
+    } catch { }
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this skill?')) return
     try {
-      await deleteSkill(id)
-      setSkills(skills.filter(s => s._id !== id))
-    } catch { setError('Failed to delete skill') }
+      await removeSkill(id)
+    } catch { }
   }
 
   return (
