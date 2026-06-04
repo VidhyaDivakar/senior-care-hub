@@ -8,7 +8,7 @@ type QuickActionsProps = {
 
 const QuickActions = ({ onAddSkill, onNewLearning, onCreatePost }: QuickActionsProps) => {
   return (
-    <div className="px-10 pb-8">
+    <div>
       <h4 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h4>
       <div className="flex flex-wrap gap-4">
         <button onClick={onAddSkill} className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700">

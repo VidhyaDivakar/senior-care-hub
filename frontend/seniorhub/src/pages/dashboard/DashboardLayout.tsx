@@ -15,14 +15,16 @@ import AddSkillForm from '../../components/AddSkillForm'
 import AddLearningForm from '../../components/AddLearningForm'
 import CreatePostForm from '../../components/CreatePostForm'
 import SkillsPreview from '../../components/SkillsPreview'
-import type { ActivityItem, Skill } from '../../types'
+import LearningRequestsPreview from '../../components/LearningRequestsPreview'
+import CommunityPostsPreview from '../../components/CommunityPostsPreview'
+import type { ActivityItem, Skill, LearningRequest, CommunityPost } from '../../types'
 //<Outlet /> is a placeholder that tells React Router "render the child route's component here."
 
 const DashboardLayout = () => {
   const navigate = useNavigate()
   const [skills, setSkills] = useState<Skill[]>([])
-  const [learningRequests, setLearningRequests] = useState<any[]>([])
-  const [posts, setPosts] = useState<any[]>([])
+  const [learningRequests, setLearningRequests] = useState<LearningRequest[]>([])
+  const [posts, setPosts] = useState<CommunityPost[]>([])
   const [username, setUsername] = useState('')
   const [showSkillModal, setShowSkillModal] = useState(false)
   const [showLearningModal, setShowLearningModal] = useState(false)
@@ -60,38 +62,44 @@ const DashboardLayout = () => {
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <Sidebar onLogout={handleLogout} />
 
-      <div className="flex-1 flex flex-col overflow-y-auto">
-        <DashboardHeader username={username} />
+      {/* Main content + Right pane */}
+      <div className="flex-1 flex overflow-hidden">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-10 py-8">
-          {cards.map(card => (
-            <StatCard key={card.label} {...card} />
-          ))}
-        </div>
+        {/* Main scrollable content */}
+        <div className="flex-1 flex flex-col overflow-y-auto">
+          <DashboardHeader username={username} />
 
-        {/* Skills + Learning Requests row */}
-        <div className="grid grid-cols-2 gap-6 px-10 pb-8">
-          <SkillsPreview skills={skills} />
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h4 className="text-lg font-bold text-gray-800">Learning Requests</h4>
-            <p className="text-gray-400 text-sm mt-2">Coming soon...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-8 py-6">
+            {cards.map(card => (
+              <StatCard key={card.label} {...card} />
+            ))}
           </div>
+
+          <div className="grid grid-cols-2 gap-6 px-8 pb-6">
+            <SkillsPreview skills={skills} />
+            <LearningRequestsPreview requests={learningRequests} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-6 px-8 pb-6">
+            <CommunityPostsPreview posts={posts} />
+            <UpcomingEvents />
+          </div>
+
+          <main className="px-8 pb-10">
+            <Outlet />
+          </main>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-10 pb-8">
+        {/* Right side pane */}
+        <aside className="w-72 bg-white border-l border-gray-100 flex flex-col gap-6 p-6 overflow-y-auto">
           <RecentActivity activities={recentActivity} />
-          <UpcomingEvents />
-        </div>
+          <QuickActions
+            onAddSkill={() => setShowSkillModal(true)}
+            onNewLearning={() => setShowLearningModal(true)}
+            onCreatePost={() => setShowPostModal(true)}
+          />
+        </aside>
 
-        <QuickActions
-          onAddSkill={() => setShowSkillModal(true)}
-          onNewLearning={() => setShowLearningModal(true)}
-          onCreatePost={() => setShowPostModal(true)}
-        />
-
-        <main className="px-10 pb-10">
-          <Outlet />
-        </main>
       </div>
 
       {showSkillModal && <AddSkillForm onClose={() => setShowSkillModal(false)} onSuccess={skill => setSkills([...skills, skill])} />}
