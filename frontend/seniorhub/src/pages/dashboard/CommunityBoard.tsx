@@ -13,6 +13,28 @@ const categoryStyle: Record<string, string> = {
   Volunteer: 'bg-green-100 text-green-700',
 }
 
+const categoryPin: Record<string, string> = {
+  General: 'bg-gray-400',
+  Event: 'bg-blue-500',
+  Announcement: 'bg-red-500',
+  Workshop: 'bg-orange-500',
+  Volunteer: 'bg-green-500',
+}
+
+const noteColors = [
+  'bg-yellow-50 border-yellow-200',
+  'bg-blue-50 border-blue-200',
+  'bg-green-50 border-green-200',
+  'bg-pink-50 border-pink-200',
+  'bg-purple-50 border-purple-200',
+  'bg-orange-50 border-orange-200',
+]
+
+const getNoteColor = (str: string) => {
+  const hash = str.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  return noteColors[hash % noteColors.length]
+}
+
 const emptyForm = { title: '', content: '', category: 'General' }
 
 const CommunityBoard = () => {
@@ -68,49 +90,52 @@ const CommunityBoard = () => {
       {posts.length === 0 ? (
         <p className="text-gray-400">No posts yet.</p>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-blue-50 text-blue-700">
-              <tr>
-                <th className="text-left px-6 py-3 font-semibold">Title</th>
-                <th className="text-left px-6 py-3 font-semibold">Content</th>
-                <th className="text-left px-6 py-3 font-semibold">Category</th>
-                <th className="text-left px-6 py-3 font-semibold">Posted By</th>
-                <th className="text-left px-6 py-3 font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {posts.map(post => (
-                <tr key={post._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-800">{post.title}</td>
-                  <td className="px-6 py-4 text-gray-500 max-w-xs truncate">{post.content}</td>
-                  <td className="px-6 py-4">
-                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle[post.category]}`}>
-                      {post.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500">{post.user?.username}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <button onClick={() => openView(post)} className="text-gray-400 hover:text-gray-600">
-                        <Eye size={16} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {posts.map(post => (
+            <div
+              key={post._id}
+              className={`relative border rounded-lg p-5 shadow-sm flex flex-col gap-3 ${getNoteColor(post.title)}`}
+            >
+              {/* Pin */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                <div className={`w-6 h-6 rounded-full shadow-md border-2 border-white ${categoryPin[post.category]}`}
+                  style={{ boxShadow: '0 2px 6px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(0,0,0,0.2)' }}
+                />
+                <div className="w-1 h-3 bg-gray-500 rounded-b-sm" style={{ marginTop: '-1px' }} />
+              </div>
+
+              {/* Category badge */}
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full w-fit ${categoryStyle[post.category]}`}>
+                {post.category}
+              </span>
+
+              {/* Title */}
+              <h4 className="font-bold text-gray-800 text-sm leading-snug">{post.title}</h4>
+
+              {/* Content */}
+              <p className="text-xs text-gray-600 line-clamp-4 leading-relaxed flex-1">{post.content}</p>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between pt-2 border-t border-black/5">
+                <span className="text-xs text-gray-400">— {post.user?.username}</span>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => openView(post)} className="text-gray-400 hover:text-gray-600">
+                    <Eye size={14} />
+                  </button>
+                  {post.user?._id === user?._id && (
+                    <>
+                      <button onClick={() => openEdit(post)} className="text-blue-400 hover:text-blue-600">
+                        <Pencil size={14} />
                       </button>
-                      {post.user?._id === user?._id && (
-                        <>
-                          <button onClick={() => openEdit(post)} className="text-blue-500 hover:text-blue-700">
-                            <Pencil size={16} />
-                          </button>
-                          <button onClick={() => handleDelete(post._id)} className="text-red-400 hover:text-red-600">
-                            <Trash2 size={16} />
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <button onClick={() => handleDelete(post._id)} className="text-red-400 hover:text-red-600">
+                        <Trash2 size={14} />
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

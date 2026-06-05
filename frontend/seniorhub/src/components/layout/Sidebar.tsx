@@ -6,7 +6,7 @@ type SidebarProps = {
 }
 
 const Sidebar = ({ onLogout }: SidebarProps) => {
-  const { isSenior, isProvider } = useRole()
+  const { isSenior, isProvider, loaded } = useRole()
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600'
@@ -21,7 +21,7 @@ const Sidebar = ({ onLogout }: SidebarProps) => {
         <ul className="flex flex-col gap-4 list-none">
           <li><NavLink to="/dashboard" end className={linkClass}>Dashboard</NavLink></li>
 
-          {isSenior && (
+          {loaded && isSenior && (
             <>
               <li><NavLink to="/dashboard/learning" className={linkClass}>Learning Requests</NavLink></li>
               <li><NavLink to="/dashboard/skills" className={linkClass}>My Skills</NavLink></li>
@@ -29,7 +29,7 @@ const Sidebar = ({ onLogout }: SidebarProps) => {
             </>
           )}
 
-          {isProvider && (
+          {loaded && isProvider && (
             <>
               <li><NavLink to="/dashboard/provider" className={linkClass}>Browse Requests</NavLink></li>
               <li><NavLink to="/dashboard/community" className={linkClass}>Community Board</NavLink></li>

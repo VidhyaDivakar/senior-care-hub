@@ -7,6 +7,19 @@ const router = express.Router();
 
 
 
+// GET all open learning requests for providers GET /api/learning-requests/open
+router.get("/open", authMiddleware, async (req, res) => {
+    try {
+        const requests = await LearningRequest.find({ status: "Open" })
+            .select("title description status createdAt")
+            .sort({ createdAt: -1 });
+        res.status(200).json(requests);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 // Create Learning Requests POST /api/learning-requests
 
 router.post("/", authMiddleware, async (req, res) => {

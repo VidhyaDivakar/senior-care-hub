@@ -31,7 +31,9 @@ const Login = () => {
           try {
             const data = await loginUser(email, password)
             login(data.token)
-            navigate('/dashboard')
+            const payload = JSON.parse(atob(data.token.split('.')[1]))
+            const role = payload.user?.role
+            navigate(role === 'provider' ? '/provider' : '/dashboard')
           } catch {
             setError('Invalid email or password')
           }

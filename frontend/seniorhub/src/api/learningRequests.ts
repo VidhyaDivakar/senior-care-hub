@@ -12,6 +12,11 @@ export const getLearningRequests = async () => {
   return response.data
 }
 
+export const getOpenLearningRequests = async () => {
+  const response = await axios.get(`${API_URL}/open`, getAuthHeader())
+  return response.data
+}
+
 export const createLearningRequest = async (title: string, description: string, status: string) => {
   const response = await axios.post(API_URL, { title, description, status }, getAuthHeader())
   return response.data
