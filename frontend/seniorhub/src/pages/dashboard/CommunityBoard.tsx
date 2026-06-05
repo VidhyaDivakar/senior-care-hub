@@ -58,7 +58,7 @@ const CommunityBoard = () => {
   const openAdd = () => { setEditing(null); setForm(emptyForm); setShowModal(true) }
   const openEdit = (post: CommunityPost) => {
     setEditing(post)
-    setForm({ title: post.title, content: post.content, category: post.category })
+    setForm({ title: post.title, content: post.content, category: post.category, admissionType: 'free' })
     setShowModal(true)
   }
 
