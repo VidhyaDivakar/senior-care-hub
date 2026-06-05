@@ -30,7 +30,7 @@ const Register = () => {
           e.preventDefault()
           try {
             await registerUser(username, email, password, role)
-            navigate('/login')
+            navigate('/login', { state: { registered: true } })
           } catch {
             setError('Registration failed. Try again.')
           }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { loginUser } from '../api/auth'
 import { useAuth } from '../hooks/useAuth'
 
@@ -8,7 +8,9 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const location = useLocation()
   const { login } = useAuth()
+  const registered = location.state?.registered
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -19,6 +21,12 @@ const Login = () => {
           <h1 className="text-2xl font-bold text-indigo-600 mb-1">Senior NexCore</h1>
           <p className="text-gray-400 text-sm">Welcome back — sign in to continue</p>
         </div>
+
+        {registered && (
+          <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3 mb-6">
+            Account created successfully — login to continue.
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-6">

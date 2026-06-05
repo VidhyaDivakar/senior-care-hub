@@ -14,10 +14,10 @@ const Overview = () => {
   const { posts } = useCommunityPosts()
 
   const cards = [
-    { label: 'My Skills', count: skills.length, icon: <Lightbulb size={32} />, bg: 'bg-indigo-50', color: 'text-indigo-600' },
-    { label: 'Learning Requests', count: requests.length, icon: <BookOpen size={32} />, bg: 'bg-purple-50', color: 'text-purple-600' },
-    { label: 'Community Posts', count: posts.length, icon: <Newspaper size={32} />, bg: 'bg-blue-50', color: 'text-blue-600' },
-    { label: 'Messages', count: 'Coming Soon', icon: <MessageCircle size={32} />, bg: 'bg-pink-50', color: 'text-pink-600' },
+    { label: 'My Skills', count: skills.length, icon: <Lightbulb size={24} />, bg: 'bg-indigo-50', color: 'text-indigo-600' },
+    { label: 'Learning Requests', count: requests.length, icon: <BookOpen size={24} />, bg: 'bg-purple-50', color: 'text-purple-600' },
+    { label: 'Community Posts', count: posts.length, icon: <Newspaper size={24} />, bg: 'bg-blue-50', color: 'text-blue-600' },
+    { label: 'Messages', count: 0, icon: <MessageCircle size={24} />, bg: 'bg-pink-50', color: 'text-pink-600' },
   ]
 
   return (
