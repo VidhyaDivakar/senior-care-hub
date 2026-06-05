@@ -87,7 +87,3 @@ Deployed on [Render](https://render.com):
 
 - **Backend** — Web Service (Node.js), environment variables set in Render dashboard
 - **Frontend** — Static Site (Vite build), `VITE_API_URL` set to backend URL
-
-## Author
-
-Vidhya Divakar — [GitHub](https://github.com/VidhyaDivakar)
