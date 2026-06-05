@@ -12,7 +12,6 @@ import AddSkillForm from '../../components/skills/AddSkillForm'
 import AddLearningForm from '../../components/learning/AddLearningForm'
 import CreatePostForm from '../../components/community/CreatePostForm'
 import type { ActivityItem } from '../../types'
-//<Outlet /> is a placeholder that tells React Router "render the child route's component here."
 
 const DashboardLayout = () => {
   const navigate = useNavigate()

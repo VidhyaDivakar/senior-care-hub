@@ -1,7 +1,6 @@
-// functions that calls the backend login endpoint
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3006/api/learning-requests'
+const API_URL = `${import.meta.env.VITE_API_URL}/api/learning-requests`
 
 const getAuthHeader = () => ({
   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }

@@ -1,7 +1,6 @@
-// functions that calls the backend login endpoint
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3006/api/auth'
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`
 
 export const loginUser = async (email: string, password: string) => {
   const response = await axios.post(`${API_URL}/login`, { email, password })

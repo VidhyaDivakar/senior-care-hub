@@ -35,7 +35,7 @@ const getNoteColor = (str: string) => {
   return noteColors[hash % noteColors.length]
 }
 
-const emptyForm = { title: '', content: '', category: 'General' }
+const emptyForm = { title: '', content: '', category: 'General', admissionType: 'free' }
 
 const CommunityBoard = () => {
   const { posts, error, addPost, editPost, removePost } = useCommunityPosts()
@@ -46,6 +46,12 @@ const CommunityBoard = () => {
   const [copied, setCopied] = useState(false)
   const [editing, setEditing] = useState<CommunityPost | null>(null)
   const [form, setForm] = useState(emptyForm)
+  const [rsvp, setRsvp] = useState<Record<string, 'attending' | 'maybe' | null>>({})
+  const [admission, setAdmission] = useState<Record<string, 'free' | 'paid'>>({})
+
+  const toggleRsvp = (postId: string, status: 'attending' | 'maybe') => {
+    setRsvp(prev => ({ ...prev, [postId]: prev[postId] === status ? null : status }))
+  }
 
   const openView = (post: CommunityPost) => { setViewing(post); setShowViewModal(true) }
 
@@ -104,16 +110,47 @@ const CommunityBoard = () => {
                 <div className="w-1 h-3 bg-gray-500 rounded-b-sm" style={{ marginTop: '-1px' }} />
               </div>
 
-              {/* Category badge */}
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full w-fit ${categoryStyle[post.category]}`}>
-                {post.category}
-              </span>
+              {/* Category + Admission */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${categoryStyle[post.category]}`}>
+                  {post.category}
+                </span>
+                {post.user?._id === user?._id ? (
+                  <button
+                    type="button"
+                    onClick={() => setAdmission(prev => ({ ...prev, [post._id]: (prev[post._id] ?? 'free') === 'free' ? 'paid' : 'free' }))}
+                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${(admission[post._id] ?? 'free') === 'free' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}
+                  >
+                    {(admission[post._id] ?? 'free') === 'free' ? 'Free ▾' : 'Paid ▾'}
+                  </button>
+                ) : (
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${(admission[post._id] ?? 'free') === 'free' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {(admission[post._id] ?? 'free') === 'free' ? 'Free' : 'Paid'}
+                  </span>
+                )}
+              </div>
 
               {/* Title */}
               <h4 className="font-bold text-gray-800 text-sm leading-snug">{post.title}</h4>
 
               {/* Content */}
               <p className="text-xs text-gray-600 line-clamp-4 leading-relaxed flex-1">{post.content}</p>
+
+              {/* RSVP */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggleRsvp(post._id, 'attending')}
+                  className={`text-xs px-3 py-1 rounded-full border transition-colors ${rsvp[post._id] === 'attending' ? 'bg-green-500 text-white border-green-500' : 'border-gray-300 text-gray-500 hover:border-green-400 hover:text-green-600'}`}
+                >
+                  Will Attend
+                </button>
+                <button
+                  onClick={() => toggleRsvp(post._id, 'maybe')}
+                  className={`text-xs px-3 py-1 rounded-full border transition-colors ${rsvp[post._id] === 'maybe' ? 'bg-amber-400 text-white border-amber-400' : 'border-gray-300 text-gray-500 hover:border-amber-400 hover:text-amber-500'}`}
+                >
+                  Might Attend
+                </button>
+              </div>
 
               {/* Footer */}
               <div className="flex items-center justify-between pt-2 border-t border-black/5">
@@ -159,6 +196,25 @@ const CommunityBoard = () => {
                 <option value="Workshop">Workshop</option>
                 <option value="Volunteer">Volunteer</option>
               </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">Admission</label>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, admissionType: 'free' })}
+                  className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${form.admissionType === 'free' ? 'bg-green-500 text-white border-green-500' : 'border-gray-200 text-gray-500 hover:border-green-400'}`}
+                >
+                  Free
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, admissionType: 'paid' })}
+                  className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${form.admissionType === 'paid' ? 'bg-amber-500 text-white border-amber-500' : 'border-gray-200 text-gray-500 hover:border-amber-400'}`}
+                >
+                  Paid
+                </button>
+              </div>
             </div>
             <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
               {editing ? 'Save Changes' : 'Create Post'}

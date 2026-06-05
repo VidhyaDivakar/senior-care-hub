@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!token) return
-    axios.get('http://localhost:3006/api/auth/me', {
+    axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => setUser(res.data)).catch(() => logout())
   }, [token])

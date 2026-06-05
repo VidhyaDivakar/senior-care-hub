@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getOpenLearningRequests } from '../../api/learningRequests'
 import { useAuth } from '../../hooks/useAuth'
 import { BookOpen, LogOut } from 'lucide-react'
-
-type LearningRequest = {
-  _id: string
-  title: string
-  description: string
-  status: string
-}
+import type { LearningRequest } from '../../types'
 
 const gradients = [
   'from-purple-400 to-indigo-500',
