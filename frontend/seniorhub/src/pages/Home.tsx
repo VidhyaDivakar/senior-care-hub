@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 
 const heroImages = [
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=80&fit=crop',
@@ -11,6 +11,7 @@ const heroImages = [
 const Home = () => {
   const navigate = useNavigate()
   const [currentImage, setCurrentImage] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -23,14 +24,31 @@ const Home = () => {
     <div className="min-h-screen bg-white flex flex-col">
 
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-10 py-4 border-b border-gray-100">
-        <h1 className="text-2xl font-bold text-indigo-900">Senior NexCore</h1>
-        <div className="flex items-center gap-6">
+      <nav className="relative flex items-center justify-between px-6 sm:px-10 py-4 border-b border-gray-100">
+        <h1 className="text-xl sm:text-2xl font-bold text-indigo-900">Senior NexCore</h1>
+
+        {/* Desktop links */}
+        <div className="hidden sm:flex items-center gap-6">
           <button onClick={() => navigate('/about')} className="text-gray-600 hover:text-indigo-600 font-medium text-sm">About</button>
           <button onClick={() => navigate('/contact')} className="text-gray-600 hover:text-indigo-600 font-medium text-sm">Contact</button>
           <button onClick={() => navigate('/login')} className="text-gray-600 hover:text-indigo-600 font-medium text-sm">Login</button>
           <button onClick={() => navigate('/register')} className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 text-sm font-medium">Get Started</button>
         </div>
+
+        {/* Mobile hamburger */}
+        <button className="sm:hidden text-gray-600 hover:text-indigo-600" onClick={() => setMobileMenuOpen(v => !v)}>
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Mobile dropdown */}
+        {mobileMenuOpen && (
+          <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-md flex flex-col py-4 px-6 gap-4 sm:hidden z-50">
+            <button onClick={() => { navigate('/about'); setMobileMenuOpen(false) }} className="text-left text-gray-600 hover:text-indigo-600 font-medium text-sm">About</button>
+            <button onClick={() => { navigate('/contact'); setMobileMenuOpen(false) }} className="text-left text-gray-600 hover:text-indigo-600 font-medium text-sm">Contact</button>
+            <button onClick={() => { navigate('/login'); setMobileMenuOpen(false) }} className="text-left text-gray-600 hover:text-indigo-600 font-medium text-sm">Login</button>
+            <button onClick={() => { navigate('/register'); setMobileMenuOpen(false) }} className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 text-sm font-medium text-left">Get Started</button>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
@@ -69,7 +87,7 @@ const Home = () => {
           <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full mb-6 inline-block tracking-wide">
             Community Platform
           </span>
-          <h2 className="text-5xl font-bold mt-6 mb-5 leading-tight">
+          <h2 className="text-3xl sm:text-5xl font-bold mt-6 mb-5 leading-tight">
             Connect. Share.<br />Learn. Contribute.
           </h2>
           <p className="text-indigo-100 text-lg max-w-xl mx-auto mb-10">
@@ -94,7 +112,7 @@ const Home = () => {
 
       {/* Stats bar */}
       <div className="bg-indigo-700 text-white py-8 px-10">
-        <div className="max-w-3xl mx-auto grid grid-cols-3 gap-6 text-center">
+        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div>
             <p className="text-3xl font-bold">500+</p>
             <p className="text-indigo-300 text-sm mt-1">Active Members</p>
@@ -111,7 +129,7 @@ const Home = () => {
       </div>
 
       {/* Features */}
-      <div className="py-20 px-10">
+      <div className="py-12 sm:py-20 px-6 sm:px-10">
         <h3 className="text-center text-3xl font-bold text-gray-800 mb-2">Everything in one place</h3>
         <p className="text-center text-gray-400 mb-12">Built around the needs of the community</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -163,7 +181,7 @@ const Home = () => {
       </div>
 
       {/* Footer */}
-      <footer className="py-6 px-10 border-t border-gray-100 flex items-center justify-between text-sm text-gray-400">
+      <footer className="py-6 px-6 sm:px-10 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-400">
         <span>© 2025 Senior NexCore</span>
         <div className="flex gap-6">
           <button onClick={() => navigate('/about')} className="hover:text-indigo-600">About</button>

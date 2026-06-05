@@ -60,7 +60,8 @@ const MySkills = () => {
         <p className="text-gray-400">No skills added yet.</p>
       ) : (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[560px]">
             <thead className="bg-indigo-50 text-indigo-700">
               <tr>
                 <th className="text-left px-6 py-3 font-semibold">Title</th>
@@ -94,7 +95,8 @@ const MySkills = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
       )}
 

@@ -17,6 +17,7 @@ const DashboardLayout = () => {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
   const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([])
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showSkillModal, setShowSkillModal] = useState(false)
   const [showLearningModal, setShowLearningModal] = useState(false)
   const [showPostModal, setShowPostModal] = useState(false)
@@ -40,20 +41,20 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar onLogout={handleLogout} />
+      <Sidebar onLogout={handleLogout} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex overflow-hidden">
 
         {/* Main scrollable content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
-          <DashboardHeader username={user?.username || ''} />
-          <main className="px-8 py-6 pb-10">
+          <DashboardHeader username={user?.username || ''} onMenuToggle={() => setSidebarOpen(prev => !prev)} />
+          <main className="px-4 sm:px-8 py-6 pb-10">
             <Outlet />
           </main>
         </div>
 
-        {/* Right side pane */}
-        <aside className="w-72 bg-white border-l border-gray-100 flex flex-col gap-6 p-6 overflow-y-auto">
+        {/* Right side pane — hidden on mobile/tablet */}
+        <aside className="hidden lg:flex w-72 bg-white border-l border-gray-100 flex-col gap-6 p-6 overflow-y-auto">
           <RecentActivity activities={recentActivity} />
           <QuickActions
             onAddSkill={() => setShowSkillModal(true)}

@@ -28,12 +28,12 @@ const Overview = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SkillsPreview skills={skills} />
         <LearningRequestsPreview requests={requests} />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CommunityPostsPreview posts={posts} />
         <UpcomingEvents />
       </div>
