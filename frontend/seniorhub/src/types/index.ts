@@ -1,3 +1,18 @@
+export type User = {
+  _id: string
+  username: string
+  email: string
+  role: 'senior' | 'provider' | 'admin'
+}
+
+export type AuthContextType = {
+  user: User | null
+  token: string | null
+  login: (token: string) => void
+  logout: () => void
+  isAuthenticated: boolean
+}
+
 export type Skill = {
   _id: string
   title: string

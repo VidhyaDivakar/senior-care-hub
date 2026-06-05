@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getLearningRequests } from '../../api/learningRequests'
 import { BookOpen } from 'lucide-react'
-
-type LearningRequest = {
-  _id: string
-  title: string
-  description: string
-  status: string
-}
+import type { LearningRequest } from '../../types'
 
 const statusStyle: Record<string, string> = {
   'Open': 'bg-blue-100 text-blue-700',

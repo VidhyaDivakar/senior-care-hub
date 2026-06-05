@@ -1,20 +1,6 @@
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
-
-type User = {
-  _id: string
-  username: string
-  email: string
-  role: 'senior' | 'provider' | 'admin'
-}
-
-type AuthContextType = {
-  user: User | null
-  token: string | null
-  login: (token: string) => void
-  logout: () => void
-  isAuthenticated: boolean
-}
+import type { User, AuthContextType } from '../types'
 
 export const AuthContext = createContext<AuthContextType | null>(null)
 
