@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const passport = require("./backend/config/passport");
 const connectDB = require("./backend/db/connectDB");
 
 const authRoutes = require("./backend/routes/api/authRoutes");
@@ -22,6 +23,7 @@ const app = express();
 app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'https://nexcorehub.onrender.com'] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
 // Routes
 app.use("/api/auth", authRoutes);

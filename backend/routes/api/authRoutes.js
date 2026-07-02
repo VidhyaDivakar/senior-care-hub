@@ -1,11 +1,18 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const passport = require("../../config/passport");
 
 const User = require("../../models/user");
 const authMiddleware = require("../../utils/auth");
 
 const router = express.Router();
+
+const signToken = (user) => jwt.sign(
+    { user: { id: user._id, role: user.role } },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+);
 
 
 
@@ -66,7 +73,7 @@ router.post("/login", (req, res, next) => {
 
         User.findOne({ email })
             .then(user => {
-                if (!user) {
+                if (!user || !user.password) {
                     return res.status(400).json({
                         message: "Invalid credentials"
                     });
@@ -80,24 +87,9 @@ router.post("/login", (req, res, next) => {
                             });
                         }
 
-                        const payload = {
-                            user: {
-                                id: user._id,
-                                role: user.role
-                            }
-                        };
-
-                        jwt.sign(
-                            payload,
-                            process.env.JWT_SECRET,
-                            { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
-                            (err, token) => {
-                                if (err) throw err;
-                                res.status(200).json({
-                                    token
-                                });
-                            }
-                        );
+                        res.status(200).json({
+                            token: signToken(user)
+                        });
                     })
                     .catch(error => {
                         next(error); // Pass the error to the next middleware
@@ -115,6 +107,38 @@ router.post("/login", (req, res, next) => {
 
 });
 
+
+
+// Google OAuth // GET /api/auth/google
+
+router.get("/google", passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false
+}));
+
+router.get("/google/callback", passport.authenticate("google", {
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/login`
+}), (req, res) => {
+    const token = signToken(req.user);
+    res.redirect(`${process.env.FRONTEND_URL}/oauth-callback?token=${token}`);
+});
+
+
+// GitHub OAuth // GET /api/auth/github
+
+router.get("/github", passport.authenticate("github", {
+    scope: ["user:email"],
+    session: false
+}));
+
+router.get("/github/callback", passport.authenticate("github", {
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/login`
+}), (req, res) => {
+    const token = signToken(req.user);
+    res.redirect(`${process.env.FRONTEND_URL}/oauth-callback?token=${token}`);
+});
 
 
 // Current User // GET /api/auth/me

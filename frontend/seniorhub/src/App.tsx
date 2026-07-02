@@ -4,6 +4,7 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import OAuthCallback from './pages/OAuthCallback'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
 import Overview from './pages/dashboard/Overview'
 import MyProfile from './pages/dashboard/MyProfile'
@@ -25,6 +26,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/oauth-callback" element={<OAuthCallback />} />
 
         <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<Overview />} />

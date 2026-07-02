@@ -16,13 +16,25 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: true
+        required: function () {
+            return !this.googleId && !this.githubId;
+        }
     },
 
     role: {
         type: String,
         enum: ['senior', 'provider', 'admin'],
         default: 'senior'
+    },
+
+    googleId: {
+        type: String,
+        default: null
+    },
+
+    githubId: {
+        type: String,
+        default: null
     }
 
 }, {
@@ -31,7 +43,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("save", async function () {
 
-    if (!this.isModified("password")) {
+    if (!this.isModified("password") || !this.password) {
         return;
     }
 
